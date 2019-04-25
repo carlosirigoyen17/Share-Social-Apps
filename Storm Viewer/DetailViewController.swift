@@ -21,6 +21,9 @@ class DetailViewController: UIViewController {
       // Title Large on Item set Never
       title = "Picture \(selectedImagePosition ?? 0) of \(totalImagesCount ?? 0)"
       navigationItem.largeTitleDisplayMode = .never
+      
+      // Display button on navigationBar for Share Content
+      navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
 
       
       if let imageToLoad = selectedImage {
@@ -38,6 +41,20 @@ class DetailViewController: UIViewController {
     navigationController?.hidesBarsOnTap = false
   }
   
+  @objc func shareTapped() {
+    // Para permitir el guardado de las imagenes en el dispositivo debemos aplicar un cambio sobre info.plist
+    // Añadir un nuevo Row, agregar Privacy Photo Library "Privacy - Photo Library Additions Usage Descrip" and add text description
+    
+    
+    guard let image = imageView.image?.jpegData(compressionQuality: 0.8) else {
+      print("Image not found")
+      return
+    }
+    
+    let vc = UIActivityViewController(activityItems: [image], applicationActivities: [])
+    vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+    present(vc, animated: true)
+  }
   
 
     /*
